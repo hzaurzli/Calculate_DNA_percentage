@@ -140,9 +140,9 @@ if __name__ == "__main__":
             fq2 = Args.workdir + '/pair_mapped_' + output_file + '_R2.fq'
             cmd_5 = mp.bam2fastq(pair_mapped_bam, fq1, fq2)
 
-
-
-
+    os.remove(sam)
+    os.remove(bam)
+    os.remove(pair_mapped_bam)
 
 
 
