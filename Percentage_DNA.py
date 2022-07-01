@@ -2,6 +2,7 @@ import os
 import argparse
 import sys
 import subprocess as sub
+from subprocess import *
 
 # def k_mers():
 
