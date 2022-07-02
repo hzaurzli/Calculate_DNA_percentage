@@ -224,6 +224,7 @@ if __name__ == "__main__":
     os.remove(bam)
     os.remove(pair_mapped_bam)
     os.remove(Args.workdir + output_file +'.fa')
+    os.remove(Args.workdir + output_file +'.f')
 
 
 
