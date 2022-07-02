@@ -192,7 +192,13 @@ if __name__ == "__main__":
                 pass
             else:
                 os.mkdir(Args.workdir + 'log/')
-            cmd_2 = mp.aliment(Args.ref_index, Args.fq_1, Args.fq_2, sam, log)
+
+            suffix = os.path.basename(Args.ref_genome)
+            suffix = suffix.pop()
+            suffix = suffix.split('.')
+            del (suffix[-1])
+            suffix = '.'.join(suffix)
+            cmd_2 = mp.aliment(Args.ref_index + suffix, Args.fq_1, Args.fq_2, sam, log)
             mp.run(cmd=cmd_2)
 
             # step3 sam2bam
@@ -223,6 +229,9 @@ if __name__ == "__main__":
     os.remove(sam)
     os.remove(bam)
     os.remove(pair_mapped_bam)
-    os.remove(Args.workdir + output_file +'.fa')
-    os.remove(Args.workdir + output_file +'.fq')
+    os.remove(Args.workdir + output_file + '.fa')
+    os.remove(Args.workdir + output_file + '.fq')
+
+
+
 
