@@ -3,11 +3,49 @@ import argparse
 import sys
 import subprocess as sub
 from subprocess import *
+import pandas as pd
 
-# def fq2fa():
+
+def fq2fa(fq1, fq2):
+    file_path = Args.fq_1
+    list = file_path.split('/')
+    list = [i for i in list if i != '']
+    if len(list) == 1:
+        output_file = list[0]
+        output_file = output_file.split('.')[0]
+        output_file = output_file.split('_')[0]
+        path = sub.getoutput('pwd') + '/'
+    else:
+        lines = ""
+        for i in range(0, len(list) - 1):
+            line = "/" + list[i]
+            lines = lines + line
+        path = lines + '/'
+        output_file = list[len(list) - 1]
+        output_file = output_file.split('.')[0]
+        output_file = output_file.split('_')[0]
+    os.system('cat %s %s > %s' % (fq1,fq2,Args.workdir + output_file +'.fq'))
+    os.system("sed -n '~4s/^@/>/p;2~4p' %s > %s" % (Args.workdir + output_file +'.fq',
+                                                    Args.workdir + output_file +'.fa'))
 
 
-# def k_mers():
+def k_mers(fa,k):
+    with open(fa, "r") as sequences:
+        lines = sequences.readlines()
+        k = 8
+        seq_list = []
+        for line in lines:
+            if line.startswith(">"):
+                pass
+            else:
+                for i in range(0, len(line) - k - 1):
+                    seq = line[i:i + k]
+                    seq_list.append(seq)
+
+    result = pd.value_counts(seq_list)
+    result.to_csv(Args.workdir + output_file +'.csv')
+    os.system("sed -i '1d' %s" % (Args.workdir + output_file +'.csv'))
+
 
 class mapping:
     def __init__(self):
@@ -47,6 +85,7 @@ if __name__ == "__main__":
     parser.add_argument("-rg", "--ref_genome", required=False, type=str, help="reference genome")
     parser.add_argument("-ri", "--ref_index", required=False, type=str, help="reference genome index")
     parser.add_argument("-wkdir", "--workdir", required=True, type=str, help="work dir")
+    parser.add_argument("-k", "--k_num", required=True, type=str, help="kmers number")
     parser.add_argument("-fq1", "--fq_1", required=True, type=str, help="Fastq1")
     parser.add_argument("-fq2", "--fq_2", required=True, type=str, help="Fastq2")
     Args = parser.parse_args()
@@ -164,9 +203,18 @@ if __name__ == "__main__":
             cmd_5 = mp.bam2fastq(pair_mapped_bam, fq1, fq2)
             mp.run(cmd=cmd_5)
 
+            # step6 fq2fa and combine
+            fq2fa(fq1,fq2)
+
+            # step7 kmers statstic
+            k_mers(fa=Args.workdir + output_file +'.fa',k=Args.k_num)
+
+
     os.remove(sam)
     os.remove(bam)
     os.remove(pair_mapped_bam)
+    os.remove(Args.workdir + output_file +'.fa')
+    
 
 
 
