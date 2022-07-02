@@ -4,10 +4,13 @@ import sys
 import subprocess as sub
 from subprocess import *
 
+# def fq2fa():
+
+
 # def k_mers():
 
 class mapping:
-    def __init__(self, bowtie2_build, bowtie2, samtools, bedtools):
+    def __init__(self):
         self.bowtie2_build = '/data/home/huanfan/miniconda3/envs/bowtile2/bin/bowtie2-build'
         self.bowtie2 = '/data/home/huanfan/miniconda3/envs/bowtile2/bin/bowtie2'
         self.samtools = '/data/home/huanfan/miniconda3/envs/bowtile2/bin/samtools'
@@ -72,26 +75,35 @@ if __name__ == "__main__":
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
 
-            os.mkdir(Args.workdir)
-            sam = Args.workdir + '/' + output_file + '.sam'
+            if os.path.isdir(Args.workdir) == True:
+                pass
+            else:
+                os.mkdir(Args.workdir)
+            sam = Args.workdir + output_file + '.sam'
 
-            log = Args.workdir + '/log/' + output_file + '.log'
-            os.mkdir(Args.workdir + '/log/')
+            log = Args.workdir + 'log/' + output_file + '.log'
+            if os.path.isdir(Args.workdir + 'log/') == True:
+                pass
+            else:
+                os.mkdir(Args.workdir + 'log/')
             cmd_2 = mp.aliment(Args.ref_index, Args.fq_1, Args.fq_2, sam, log)
+            mp.run(cmd=cmd_2)
 
-            # step3 sam2bam
-            bam = Args.workdir + '/' + output_file + '.bam'
+            # step2 sam2bam
+            bam = Args.workdir + output_file + '.bam'
             cmd_3 = mp.sam2bam(sam, bam)
             mp.run(cmd=cmd_3)
 
-            # step4 pick pair mapped reads
-            pair_mapped_bam = Args.workdir + '/' + output_file + '_pair_mapped.bam'
+            # step3 pick pair mapped reads
+            pair_mapped_bam = Args.workdir + output_file + '_pair_mapped.bam'
             cmd_4 = mp.pair_mapped(bam, pair_mapped_bam)
+            mp.run(cmd=cmd_4)
 
-            # step5 pick pair mapped reads
-            fq1 = Args.workdir + '/pair_mapped_' + output_file + '_R1.fq'
-            fq2 = Args.workdir + '/pair_mapped_' + output_file + '_R2.fq'
+            # step4 pick pair mapped reads
+            fq1 = Args.workdir + 'pair_mapped_' + output_file + '_R1.fq'
+            fq2 = Args.workdir + 'pair_mapped_' + output_file + '_R2.fq'
             cmd_5 = mp.bam2fastq(pair_mapped_bam, fq1, fq2)
+            mp.run(cmd=cmd_5)
 
     else:
         if Args.ref_index == None:
@@ -120,26 +132,37 @@ if __name__ == "__main__":
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
 
-            os.mkdir(Args.workdir)
-            sam = Args.workdir + '/' + output_file + '.sam'
+            if os.path.isdir(Args.workdir) == True:
+                pass
+            else:
+                os.mkdir(Args.workdir)
 
-            log = Args.workdir + '/log/' + output_file + '.log'
-            os.mkdir(Args.workdir + '/log/')
+            os.mkdir(Args.workdir)
+            sam = Args.workdir + output_file + '.sam'
+
+            log = Args.workdir + 'log/' + output_file + '.log'
+            if os.path.isdir(Args.workdir + 'log/') == True:
+                pass
+            else:
+                os.mkdir(Args.workdir + 'log/')
             cmd_2 = mp.aliment(Args.ref_index, Args.fq_1, Args.fq_2, sam, log)
+            mp.run(cmd=cmd_2)
 
             # step3 sam2bam
-            bam = Args.workdir + '/' + output_file + '.bam'
+            bam = Args.workdir + output_file + '.bam'
             cmd_3 = mp.sam2bam(sam, bam)
             mp.run(cmd=cmd_3)
 
             # step4 pick pair mapped reads
-            pair_mapped_bam = Args.workdir + '/' + output_file + '_pair_mapped.bam'
+            pair_mapped_bam = Args.workdir + output_file + '_pair_mapped.bam'
             cmd_4 = mp.pair_mapped(bam, pair_mapped_bam)
+            mp.run(cmd=cmd_4)
 
             # step5 pick pair mapped reads
-            fq1 = Args.workdir + '/pair_mapped_' + output_file + '_R1.fq'
-            fq2 = Args.workdir + '/pair_mapped_' + output_file + '_R2.fq'
+            fq1 = Args.workdir + 'pair_mapped_' + output_file + '_R1.fq'
+            fq2 = Args.workdir + 'pair_mapped_' + output_file + '_R2.fq'
             cmd_5 = mp.bam2fastq(pair_mapped_bam, fq1, fq2)
+            mp.run(cmd=cmd_5)
 
     os.remove(sam)
     os.remove(bam)
