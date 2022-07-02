@@ -25,7 +25,7 @@ def fq2fa(fq1, fq2):
         output_file = output_file.split('.')[0]
         output_file = output_file.split('_')[0]
     os.system('cat %s %s > %s' % (fq1,fq2,Args.workdir + output_file +'.fq'))
-    os.system("sed -n '~4s/^@/>/p;2~4p' %s > %s" % (Args.workdir + output_file +'.fq',
+    os.system("sed -n '1~4s/^@/>/p;2~4p' %s > %s" % (Args.workdir + output_file +'.fq',
                                                     Args.workdir + output_file +'.fa'))
 
 
@@ -144,6 +144,14 @@ if __name__ == "__main__":
             cmd_5 = mp.bam2fastq(pair_mapped_bam, fq1, fq2)
             mp.run(cmd=cmd_5)
 
+            # step5 fq2fa and combine
+            print('fastq to fasta!!!')
+            fq2fa(fq1, fq2)
+
+            # step6 kmers statstic
+            print('kmers table')
+            k_mers(fa=Args.workdir + output_file + '.fa', k=Args.k_num)
+
     else:
         if Args.ref_index == None:
             raise 'Please add reference index path!!!'
@@ -204,9 +212,11 @@ if __name__ == "__main__":
             mp.run(cmd=cmd_5)
 
             # step6 fq2fa and combine
+            print('fastq to fasta!!!')
             fq2fa(fq1,fq2)
 
             # step7 kmers statstic
+            print('kmers table')
             k_mers(fa=Args.workdir + output_file +'.fa',k=Args.k_num)
 
 
@@ -214,7 +224,7 @@ if __name__ == "__main__":
     os.remove(bam)
     os.remove(pair_mapped_bam)
     os.remove(Args.workdir + output_file +'.fa')
-    
+
 
 
 
