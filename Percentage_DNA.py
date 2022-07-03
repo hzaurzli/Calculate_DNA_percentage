@@ -84,7 +84,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DNA persentage")
     parser.add_argument("-rg", "--ref_genome", required=False, type=str, help="reference genome")
     parser.add_argument("-ri", "--ref_index", required=False, type=str,
-                        help="reference genome index,if you use -rg please add genome index's suffix;eg 'geoome';if not,please add path and suffix;eg 'genome'")
+                        help="reference genome index,if you use -rg please add genome index's suffix;eg 'genome';if not,please add path and suffix;eg 'genome'")
     parser.add_argument("-wkdir", "--workdir", required=True, type=str, help="work dir")
     parser.add_argument("-k", "--k_num", required=True, type=str, help="kmers number")
     parser.add_argument("-fq1", "--fq_1", required=True, type=str, help="Fastq1")
