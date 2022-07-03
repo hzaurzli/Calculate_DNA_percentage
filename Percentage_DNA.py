@@ -158,8 +158,16 @@ if __name__ == "__main__":
             raise 'Please add reference index path!!!'
         else:
             # step1 make reference index
-            os.mkdir(Args.workdir)
-            os.mkdir(Args.workdir + Args.ref_index + '_index/')
+            if os.path.isdir(Args.workdir) == True:
+                pass
+            else:
+                os.mkdir(Args.workdir)
+
+            if os.path.isdir(Args.workdir + Args.ref_index + '_index/') == True:
+                pass
+            else:
+                os.mkdir(Args.workdir + Args.ref_index + '_index/')
+
             cmd_1 = mp.make_index(Args.ref_genome,
                                   Args.workdir + Args.ref_index + '_index/' + Args.ref_index)
             mp.run(cmd=cmd_1)
@@ -182,11 +190,6 @@ if __name__ == "__main__":
                 output_file = list[len(list) - 1]
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
-
-            if os.path.isdir(Args.workdir) == True:
-                pass
-            else:
-                os.mkdir(Args.workdir)
 
             sam = Args.workdir + output_file + '.sam'
 
