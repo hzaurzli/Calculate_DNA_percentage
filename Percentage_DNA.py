@@ -84,7 +84,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DNA persentage")
     parser.add_argument("-rg", "--ref_genome", required=False, type=str, help="reference genome")
     parser.add_argument("-ri", "--ref_index", required=False, type=str,
-                        help="reference genome index,if you use -rg please add genome index's path;eg /.../index/;if not,please add suffix;eg /.../index/genome")
+                        help="reference genome index,if you use -rg please add genome index's path and suffix;eg '/.../index/geoome';if not,please add suffix;eg 'genome'")
     parser.add_argument("-wkdir", "--workdir", required=True, type=str, help="work dir")
     parser.add_argument("-k", "--k_num", required=True, type=str, help="kmers number")
     parser.add_argument("-fq1", "--fq_1", required=True, type=str, help="Fastq1")
@@ -158,7 +158,10 @@ if __name__ == "__main__":
             raise 'Please add reference index path!!!'
         else:
             # step1 make reference index
-            cmd_1 = mp.make_index(Args.ref_genome, Args.ref_index)
+            os.mkdir(Args.workdir)
+            os.mkdir(Args.workdir + Args.ref_index + '_index/')
+            cmd_1 = mp.make_index(Args.ref_genome,
+                                  Args.workdir + Args.ref_index + '_index/' + Args.ref_index)
             mp.run(cmd=cmd_1)
 
             # step2 aliment
@@ -185,7 +188,6 @@ if __name__ == "__main__":
             else:
                 os.mkdir(Args.workdir)
 
-            os.mkdir(Args.workdir)
             sam = Args.workdir + output_file + '.sam'
 
             log = Args.workdir + 'log/' + output_file + '.log'
@@ -194,12 +196,8 @@ if __name__ == "__main__":
             else:
                 os.mkdir(Args.workdir + 'log/')
 
-            suffix = os.path.basename(Args.ref_genome)
-            suffix = suffix.pop()
-            suffix = suffix.split('.')
-            del (suffix[-1])
-            suffix = '.'.join(suffix)
-            cmd_2 = mp.aliment(Args.ref_index + suffix, Args.fq_1, Args.fq_2, sam, log)
+            cmd_2 = mp.aliment(Args.workdir + Args.ref_index + '_index/' + Args.ref_index,
+                               Args.fq_1, Args.fq_2, sam, log)
             mp.run(cmd=cmd_2)
 
             # step3 sam2bam
