@@ -15,7 +15,7 @@ for i in samples:
         line = "#!/bin/bash" + "\n"
         line = line + "/data/home/huanfan/miniconda3/bin/python3 "
         line = line + "/data/home/huanfan/pycharm/venv/Percentage_DNA.py -wkdir ~/runze/test/ "
-        line = line + "-ri ~/runze/ref/index/plastome -fq1 ~/runze/mix_cleandata/" + i + "_R1.fq.gz "
+        line = line + "-ri ~/runze/ref/index/chloroplast -fq1 ~/runze/mix_cleandata/" + i + "_R1.fq.gz "
         line = line + "-fq2 ~/runze/mix_cleandata/" + i + "_R2.fq.gz -k 8"
         w.write(line)
 
