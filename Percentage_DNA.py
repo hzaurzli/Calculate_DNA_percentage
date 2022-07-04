@@ -21,6 +21,7 @@
 #  Foundation, Inc., Xishuangbanna tropical botanical garden.
 
 
+
 import argparse
 import os,sys,csv
 import subprocess as sub
@@ -30,20 +31,20 @@ import pandas as pd
 
 def fq2fa(fq1, fq2):
     file_path = Args.fq_1
-    list = file_path.split('/')
-    list = [i for i in list if i != '']
-    if len(list) == 1:
-        output_file = list[0]
+    list_path = file_path.split('/')
+    list_path = [i for i in list_path if i != '']
+    if len(list_path) == 1:
+        output_file = list_path[0]
         output_file = output_file.split('.')[0]
         output_file = output_file.split('_')[0]
         path = sub.getoutput('pwd') + '/'
     else:
         lines = ""
-        for i in range(0, len(list) - 1):
-            line = "/" + list[i]
+        for i in range(0, len(list_path) - 1):
+            line = "/" + list_path[i]
             lines = lines + line
         path = lines + '/'
-        output_file = list[len(list) - 1]
+        output_file = list_path[len(list_path) - 1]
         output_file = output_file.split('.')[0]
         output_file = output_file.split('_')[0]
     os.system('cat %s %s > %s' % (fq1,fq2,Args.workdir + output_file +'.fq'))
@@ -159,20 +160,20 @@ if __name__ == "__main__":
         else:
             # step1 aliment
             file_path = Args.fq_1
-            list = file_path.split('/')
-            list = [i for i in list if i != '']
-            if len(list) == 1:
-                output_file = list[0]
+            list_path = file_path.split('/')
+            list_path = [i for i in list_path if i != '']
+            if len(list_path) == 1:
+                output_file = list_path[0]
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
                 path = sub.getoutput('pwd') + '/'
             else:
                 lines = ""
-                for i in range(0, len(list) - 1):
-                    line = "/" + list[i]
+                for i in range(0, len(list_path) - 1):
+                    line = "/" + list_path[i]
                     lines = lines + line
                 path = lines + '/'
-                output_file = list[len(list) - 1]
+                output_file = list_path[len(list_path) - 1]
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
 
@@ -237,20 +238,20 @@ if __name__ == "__main__":
 
             # step2 aliment
             file_path = Args.fq_1
-            list = file_path.split('/')
-            list = [i for i in list if i != '']
-            if len(list) == 1:
-                output_file = list[0]
+            list_path = file_path.split('/')
+            list_path = [i for i in list_path if i != '']
+            if len(list_path) == 1:
+                output_file = list_path[0]
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
                 path = sub.getoutput('pwd') + '/'
             else:
                 lines = ""
-                for i in range(0, len(list) - 1):
-                    line = "/" + list[i]
+                for i in range(0, len(list_path) - 1):
+                    line = "/" + list_path[i]
                     lines = lines + line
                 path = lines + '/'
-                output_file = list[len(list) - 1]
+                output_file = list_path[len(list_path) - 1]
                 output_file = output_file.split('.')[0]
                 output_file = output_file.split('_')[0]
 
@@ -299,5 +300,7 @@ if __name__ == "__main__":
     os.remove(Args.workdir + output_file + '.fa')
     os.remove(Args.workdir + output_file + '.fq')
     os.remove(Args.workdir + output_file + '_tmp.csv')
+    
+    
     
     
