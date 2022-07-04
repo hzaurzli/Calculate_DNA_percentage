@@ -67,7 +67,7 @@ def k_mers(fa,k):
 
     result = pd.value_counts(seq_list)
     result.to_csv(Args.workdir + output_file +'_tmp.csv')
-    os.system("sed -i '1d' %s" % (Args.workdir + output_file +'.csv'))
+    os.system("sed -i '1d' %s" % (Args.workdir + output_file +'_tmp.csv'))
 
 def DNA_reversal_complement(sequence):
 
@@ -300,7 +300,10 @@ if __name__ == "__main__":
     os.remove(Args.workdir + output_file + '.fa')
     os.remove(Args.workdir + output_file + '.fq')
     os.remove(Args.workdir + output_file + '_tmp.csv')
-    
-    
+
+
+
+
+
     
     
