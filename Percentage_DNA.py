@@ -3,7 +3,7 @@
 #
 #  Percentage_DNA.py 
 #
-#  Copyright 2021 Small runze
+#  Copyright 2022 Small runze
 #  <small.runze@gmail.com> Small runze
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -21,9 +21,8 @@
 #  Foundation, Inc., Xishuangbanna tropical botanical garden.
 
 
-import os
 import argparse
-import sys
+import os,sys,csv
 import subprocess as sub
 from subprocess import *
 import pandas as pd
@@ -66,8 +65,47 @@ def k_mers(fa,k):
                     seq_list.append(seq)
 
     result = pd.value_counts(seq_list)
-    result.to_csv(Args.workdir + output_file +'.csv')
+    result.to_csv(Args.workdir + output_file +'_tmp.csv')
     os.system("sed -i '1d' %s" % (Args.workdir + output_file +'.csv'))
+
+def DNA_reversal_complement(sequence):
+
+    comp_dict = {
+        "A":"T",
+        "T":"A",
+        "G":"C",
+        "C":"G",
+        "N":"N"
+    }
+
+    sequence_list = list(sequence)
+    sequence_list = [comp_dict[base] for base in sequence_list]
+    string = ''.join(sequence_list)
+    return string[::-1]
+
+def sort_table(input,output):
+    dict = {}
+
+    with open(input, mode='r') as inp:
+        reader = csv.reader(inp)
+        dict = {rows[0]: rows[1] for rows in reader}
+
+    new_sys = sorted(dict)
+
+    with open(output, mode='w') as f:
+        for i in new_sys:
+            if 'N' in i:
+                pass
+            else:
+                if DNA_reversal_complement(i) in dict.keys():
+                    line = i + ',' + str(int(dict[i]) + int(dict[DNA_reversal_complement(i)])) + '\n'
+                    new_sys.remove(DNA_reversal_complement(i))
+                    del dict[DNA_reversal_complement(i)]
+                    f.write(line)
+                else:
+                    line = i + ':' + str(int(dict[i])) + '\n'
+                    f.write(line)
+    f.close()
 
 
 class mapping:
@@ -105,13 +143,13 @@ class mapping:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DNA persentage")
-    parser.add_argument("-rg", "--ref_genome", required=False, type=str, help="reference genome")
+    parser.add_argument("-rg", "--ref_genome", required=False, type=str, help="Reference genome")
     parser.add_argument("-ri", "--ref_index", required=False, type=str,
-                        help="reference genome index,if you use -rg please add genome index's suffix;eg 'genome';if not,please add path and suffix;eg '/.../index/genome'")
-    parser.add_argument("-wkdir", "--workdir", required=True, type=str, help="work dir")
+                        help="Reference genome index,if you use -rg please add genome index's suffix;eg 'genome';if not,please add path and suffix;eg '/.../index/genome'")
+    parser.add_argument("-wkdir", "--workdir", required=True, type=str, help="Work dir")
     parser.add_argument("-k", "--k_num", required=True, type=str, help="kmers number")
-    parser.add_argument("-fq1", "--fq_1", required=True, type=str, help="Fastq1")
-    parser.add_argument("-fq2", "--fq_2", required=True, type=str, help="Fastq2")
+    parser.add_argument("-fq1", "--fq_1", required=True, type=str, help="Input Fastq1")
+    parser.add_argument("-fq2", "--fq_2", required=True, type=str, help="Input Fastq2")
     Args = parser.parse_args()
 
     mp = mapping()
@@ -173,8 +211,10 @@ if __name__ == "__main__":
             fq2fa(fq1, fq2)
 
             # step6 kmers statstic
-            print('kmers table')
+            print('kmers table!!!')
             k_mers(fa=Args.workdir + output_file + '.fa', k=Args.k_num)
+            sort_table(input=Args.workdir + output_file +'_tmp.csv',
+                       output=Args.workdir + output_file +'.csv')
 
     else:
         if Args.ref_index == None:
@@ -247,8 +287,10 @@ if __name__ == "__main__":
             fq2fa(fq1,fq2)
 
             # step7 kmers statstic
-            print('kmers table')
+            print('kmers table!!!')
             k_mers(fa=Args.workdir + output_file +'.fa',k=Args.k_num)
+            sort_table(input=Args.workdir + output_file + '_tmp.csv',
+                       output=Args.workdir + output_file + '.csv')
 
 
     os.remove(sam)
@@ -256,7 +298,6 @@ if __name__ == "__main__":
     os.remove(pair_mapped_bam)
     os.remove(Args.workdir + output_file + '.fa')
     os.remove(Args.workdir + output_file + '.fq')
-
-
-
-
+    os.remove(Args.workdir + output_file + '_tmp.csv')
+    
+    
