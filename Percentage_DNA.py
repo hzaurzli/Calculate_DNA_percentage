@@ -1,27 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
-#  Percentage_DNA.py 
-#
-#  Copyright 2022 Small runze
-#  <small.runze@gmail.com> Small runze
-#
-#  This program is free software; you can redistribute it and/or modify
-#  it under the terms of the GNU General Public License as published by
-#  the Free Software Foundation; either version 2 of the License, or
-#  (at your option) any later version.
-#
-#  This program is distributed in the hope that it will be useful,
-#  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#  GNU General Public License for more details.
-#
-#  You should have received a copy of the GNU General Public License
-#  along with this program; if not, write to the Free Software
-#  Foundation, Inc., Xishuangbanna tropical botanical garden.
-
-
-
 import argparse
 import os,sys,csv
 import subprocess as sub
@@ -55,14 +31,14 @@ def fq2fa(fq1, fq2):
 def k_mers(fa,k):
     with open(fa, "r") as sequences:
         lines = sequences.readlines()
-        k = k
+        k_seq = int(k)
         seq_list = []
         for line in lines:
             if line.startswith(">"):
                 pass
             else:
-                for i in range(0, len(line) - k - 1):
-                    seq = line[i:i + k]
+                for i in range(0, len(line) - k_seq - 1):
+                    seq = line[i:i + k_seq]
                     seq_list.append(seq)
 
     result = pd.value_counts(seq_list)
@@ -304,6 +280,3 @@ if __name__ == "__main__":
 
 
 
-
-    
-    
