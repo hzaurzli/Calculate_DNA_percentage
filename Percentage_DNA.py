@@ -55,7 +55,7 @@ def fq2fa(fq1, fq2):
 def k_mers(fa,k):
     with open(fa, "r") as sequences:
         lines = sequences.readlines()
-        k = 8
+        k = k
         seq_list = []
         for line in lines:
             if line.startswith(">"):
