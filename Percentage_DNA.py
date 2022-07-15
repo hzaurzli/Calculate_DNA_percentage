@@ -105,7 +105,7 @@ def sort_table(input,output):
                     del dict[DNA_reversal_complement(i)]
                     f.write(line)
                 else:
-                    line = i + ':' + str(int(dict[i])) + '\n'
+                    line = i + ',' + str(int(dict[i])) + '\n'
                     f.write(line)
     f.close()
 
