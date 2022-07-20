@@ -86,26 +86,28 @@ def DNA_reversal_complement(sequence):
     return string[::-1]
 
 def sort_table(input,output):
-    dict = {}
+    dict_unsort = {}
 
     with open(input, mode='r') as inp:
         reader = csv.reader(inp)
-        dict = {rows[0]: rows[1] for rows in reader}
+        dict_unsort = {rows[0]: rows[1] for rows in reader}
 
-    new_sys = sorted(dict)
+    new_sys = sorted(dict_unsort.items(),key=lambda x:x[0])
+    dict_sort = dict(new_sys)
+    dict_sort_1 = dict(new_sys)
 
     with open(output, mode='w') as f:
-        for i in new_sys:
+        for i in dict_sort.keys():
             if 'N' in i:
                 pass
             else:
-                if DNA_reversal_complement(i) in dict.keys():
-                    line = i + ',' + str(int(dict[i]) + int(dict[DNA_reversal_complement(i)])) + '\n'
-                    new_sys.remove(DNA_reversal_complement(i))
-                    del dict[DNA_reversal_complement(i)]
+                rev_seq = DNA_reversal_complement(i)
+                if i in dict_sort_1.keys() and rev_seq in dict_sort_1.keys():
+                    line = i + ',' + str(int(dict_sort_1[i]) + int(dict_sort_1[rev_seq])) + '\n'
+                    del dict_sort_1[rev_seq]
                     f.write(line)
-                else:
-                    line = i + ',' + str(int(dict[i])) + '\n'
+                elif i in dict_sort_1.keys() and rev_seq not in dict_sort_1.keys():
+                    line = i + ',' + str(int(dict_sort_1[i])) + '\n'
                     f.write(line)
     f.close()
 
