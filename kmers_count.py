@@ -155,12 +155,12 @@ if __name__ == "__main__":
                output= './'  + output_file + '.csv')
 
         os.remove('./' + output_file + '_tmp.csv')
-        os.remove("./" + output_file + '.fa')
+        
 
         end = time.time()
         print(str(end - start) + 's')
 
     else:
         raise "Please add correct parameters!!!"
-
-
+        
+        
