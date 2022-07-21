@@ -155,7 +155,6 @@ if __name__ == "__main__":
                output= './'  + output_file + '.csv')
 
         os.remove('./' + output_file + '_tmp.csv')
-        os.remove("./" + output_file + '.fq')
         os.remove("./" + output_file + '.fa')
 
         end = time.time()
