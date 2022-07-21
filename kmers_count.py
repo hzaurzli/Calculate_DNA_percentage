@@ -29,7 +29,7 @@ def fq2fa(fq1, fq2):
                                                      './' + output_file +'.fa'))
 
 
-def k_mers(fa,k):
+def k_mers(fa,k,s):
     with open(fa, "r") as sequences:
         lines = sequences.readlines()
         k_seq = int(k)
@@ -38,7 +38,7 @@ def k_mers(fa,k):
             if line.startswith(">"):
                 pass
             else:
-                for i in range(0, len(line) - k_seq - 1):
+                for i in range(0, len(line) - k_seq - 1, int(s)+1):
                     seq = line[i:i + k_seq]
                     seq_list.append(seq)
 
@@ -95,6 +95,7 @@ if __name__ == "__main__":
     parser.add_argument("-fq2", "--fq_2", required=False, type=str, help="Input Fastq2")
     parser.add_argument("-fa", "--fasta", required=False, type=str, help="Input Fasta")
     parser.add_argument("-k", "--k_num", required=True, type=str, help="kmers number")
+    parser.add_argument("-s", "--shift", required=True, type=str, help="kmers shift number")
     Args = parser.parse_args()
 
     if Args.fq_1 != None and Args.fq_2 != None:
@@ -119,7 +120,7 @@ if __name__ == "__main__":
             output_file = output_file.split('_')[0]
 
         fq2fa(Args.fq_1, Args.fq_2)
-        k_mers(fa= './' + output_file + '.fa', k=Args.k_num)
+        k_mers(fa= './' + output_file + '.fa', k=Args.k_num,s=Args.shift)
         sort_table(input= './'  + output_file + '_tmp.csv',
                    output= './'  + output_file + '.csv')
         os.remove('./'  + output_file + '_tmp.csv')
@@ -149,7 +150,7 @@ if __name__ == "__main__":
             output_file = list_path[len(list_path) - 1]
             output_file = output_file.split('.')[0]
             output_file = output_file.split('_')[0]
-        k_mers(fa=Args.fasta, k=Args.k_num)
+        k_mers(fa='./' + output_file + '.fa', k=Args.k_num, s=Args.shift)
         sort_table(input= './'  + output_file + '_tmp.csv',
                output= './'  + output_file + '.csv')
 
@@ -162,3 +163,4 @@ if __name__ == "__main__":
 
     else:
         raise "Please add correct parameters!!!"
+
