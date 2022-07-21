@@ -5,12 +5,12 @@
 If you don't establish genome's index:
 ```
 /data/home/huanfan/miniconda3/bin/python3 /data/home/huanfan/pycharm/venv/Percentage_DNA.py -wkdir /test/ -rg <refence genome;eg /.../genome.fa> 
--ri <refence index;eg genome(genome is suffix)> -fq1 <fastq1> -fq2 <fastq2> -k 8
+-ri <refence index;eg genome(genome is suffix)> -fq1 <fastq1> -fq2 <fastq2> -k 8 -s 0
 ```
 
 If you establish genome's index:
 ```
-/data/home/huanfan/miniconda3/bin/python3 /data/home/huanfan/pycharm/venv/Percentage_DNA.py -wkdir /test/ -ri <refence index adding suffix;eg /.../index/genome(genome is suffix)> -fq1 <fastq1> -fq2 <fastq2> -k 8
+/data/home/huanfan/miniconda3/bin/python3 /data/home/huanfan/pycharm/venv/Percentage_DNA.py -wkdir /test/ -ri <refence index adding suffix;eg /.../index/genome(genome is suffix)> -fq1 <fastq1> -fq2 <fastq2> -k 8 -s 0
 ```
 Notice:format of fastq is ```<file name>```_R1.fq or ```<file name>```_R2.fq
 
@@ -38,4 +38,9 @@ Options:
         -h, --help
                 Show this help message and exit
 
+```
+
+kmers diversity:
+```
+~/miniconda3/bin/python3 ~/pycharm/venv/kmers_count.py -fq1 MB-1_R1.fq -fq2 MB-1_R2.fq -k 20 -s 3
 ```
