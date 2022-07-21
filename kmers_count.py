@@ -98,7 +98,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--shift", required=True, type=str, help="kmers shift number")
     Args = parser.parse_args()
 
-    if Args.fq_1 != None and Args.fq_2 != None:
+    if Args.fq_1 != None and Args.fq_2 != None and Args.fasta == None:
         start = time.time()
 
         file_path = Args.fq_1
@@ -122,7 +122,7 @@ if __name__ == "__main__":
         fq2fa(Args.fq_1, Args.fq_2)
         k_mers(fa= './' + output_file + '.fa', k=Args.k_num,s=Args.shift)
         sort_table(input= './'  + output_file + '_tmp.csv',
-                   output= './'  + output_file + '.csv')
+                   output= './'  + output_file + '-' + Args.k_num + '.csv')
         os.remove('./'  + output_file + '_tmp.csv')
         os.remove("./" + output_file +'.fq')
         os.remove("./" + output_file + '.fa')
@@ -138,6 +138,7 @@ if __name__ == "__main__":
         list_path = [i for i in list_path if i != '']
         if len(list_path) == 1:
             output_file = list_path[0]
+            suffix = output_file.split('.')[1]
             output_file = output_file.split('.')[0]
             output_file = output_file.split('_')[0]
             path = sub.getoutput('pwd') + '/'
@@ -148,19 +149,21 @@ if __name__ == "__main__":
                 lines = lines + line
             path = lines + '/'
             output_file = list_path[len(list_path) - 1]
+            suffix = output_file.split('.')[1]
             output_file = output_file.split('.')[0]
             output_file = output_file.split('_')[0]
-        k_mers(fa='./' + output_file + '.fa', k=Args.k_num, s=Args.shift)
-        sort_table(input= './'  + output_file + '_tmp.csv',
-               output= './'  + output_file + '.csv')
+        k_mers(fa='./' + output_file + '.' + suffix, k=Args.k_num, s=Args.shift)
+        sort_table(input= './' + output_file + '_tmp.csv',
+               output= './' + output_file + '-' + Args.k_num + '.csv')
 
         os.remove('./' + output_file + '_tmp.csv')
-        
+
 
         end = time.time()
         print(str(end - start) + 's')
 
     else:
         raise "Please add correct parameters!!!"
+
         
         
