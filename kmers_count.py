@@ -133,7 +133,7 @@ if __name__ == "__main__":
     elif Args.fq_1 == None and Args.fq_2 == None and Args.fasta != None:
         start = time.time()
 
-        file_path = fa
+        file_path = Args.fasta
         list_path = file_path.split('/')
         list_path = [i for i in list_path if i != '']
         if len(list_path) == 1:
