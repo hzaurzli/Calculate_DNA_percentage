@@ -114,12 +114,30 @@ if __name__ == "__main__":
             for i in range(0, len(list_path) - 1):
                 line = "/" + list_path[i]
                 lines = lines + line
-            path = lines + '/'
+            path = sub.getoutput('pwd') + '/'
             output_file = list_path[len(list_path) - 1]
             output_file = output_file.split('.')[0]
             output_file = output_file.split('_')[0]
 
-        fq2fa(Args.fq_1, Args.fq_2)
+        if Args.fq_1[0:2] == './':
+            dir_1 = os.path.abspath(Args.fq_1)
+        elif Args.fq_1[0:1] == '/':
+            dir_1 = os.path.abspath('.' + Args.fq_1)
+        elif Args.fq_1[0:1] != './':
+            dir_1 = os.path.abspath('./' + Args.fq_1)
+        elif Args.fq_1[0:3] == '../':
+            dir_1 = os.path.abspath(Args.fq_1)
+
+        if Args.fq_2[0:2] == './':
+            dir_2 = os.path.abspath(Args.fq_2)
+        elif Args.fq_2[0:1] == '/':
+            dir_2 = os.path.abspath('.' + Args.fq_2)
+        elif Args.fq_2[0:1] != './':
+            dir_2 = os.path.abspath('./' + Args.fq_2)
+        elif Args.fq_2[0:3] == '../':
+            dir_2 = os.path.abspath(Args.fq_2)
+
+        fq2fa(dir_1, dir_2)
         k_mers(fa= path + output_file + '.fa', k=Args.k_num,s=Args.shift)
         sort_table(input= path + output_file + '_tmp.csv',
                    output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
@@ -147,22 +165,31 @@ if __name__ == "__main__":
             for i in range(0, len(list_path) - 1):
                 line = "/" + list_path[i]
                 lines = lines + line
-            path = lines + '/'
+            path = sub.getoutput('pwd') + '/'
             output_file = list_path[len(list_path) - 1]
             suffix = output_file.split('.')[1]
             output_file = output_file.split('.')[0]
             output_file = output_file.split('_')[0]
-        k_mers(fa=path + output_file + '.' + suffix, k=Args.k_num, s=Args.shift)
+
+        if Args.fasta[0:2] == './':
+            dir = os.path.abspath(Args.fasta)
+        elif Args.fasta[0:1] == '/':
+            dir = os.path.abspath('.' + Args.fasta)
+        elif Args.fasta[0:1] != './':
+            dir = os.path.abspath('./' + Args.fasta)
+        elif Args.fasta[0:3] == '../':
+            dir = os.path.abspath(Args.fasta)
+
+        k_mers(fa= dir, k=Args.k_num, s=Args.shift)
         sort_table(input= path + output_file + '_tmp.csv',
                output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
 
         os.remove(path + output_file + '_tmp.csv')
-
 
         end = time.time()
         print(str(end - start) + 's')
 
     else:
         raise "Please add correct parameters!!!"
-
+        
         
