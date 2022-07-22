@@ -19,7 +19,7 @@ def fq2fa(fq1, fq2):
         for i in range(0, len(list_path) - 1):
             line = "/" + list_path[i]
             lines = lines + line
-        path = lines + '/'
+        path = sub.getoutput('pwd') + '/'
         output_file = list_path[len(list_path) - 1]
         output_file = output_file.split('.')[0]
         output_file = output_file.split('_')[0]
