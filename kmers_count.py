@@ -24,9 +24,9 @@ def fq2fa(fq1, fq2):
         output_file = output_file.split('.')[0]
         output_file = output_file.split('_')[0]
 
-    os.system('cat %s %s > %s' % (fq1,fq2,"./" + output_file +'.fq'))
-    os.system("sed -n '1~4s/^@/>/p;2~4p' %s > %s" % ('./' + output_file +'.fq',
-                                                     './' + output_file +'.fa'))
+    os.system('cat %s %s > %s' % (fq1,fq2,path + output_file +'.fq'))
+    os.system("sed -n '1~4s/^@/>/p;2~4p' %s > %s" % (path + output_file +'.fq',
+                                                     path + output_file +'.fa'))
 
 
 def k_mers(fa,k,s):
@@ -43,8 +43,8 @@ def k_mers(fa,k,s):
                     seq_list.append(seq)
 
     result = pd.value_counts(seq_list)
-    result.to_csv('./' + output_file +'_tmp.csv')
-    os.system("sed -i '1d' %s" % ('./' + output_file +'_tmp.csv'))
+    result.to_csv(path + output_file +'_tmp.csv')
+    os.system("sed -i '1d' %s" % (path + output_file +'_tmp.csv'))
 
 
 def DNA_reversal_complement(sequence):
@@ -121,8 +121,8 @@ if __name__ == "__main__":
 
         fq2fa(Args.fq_1, Args.fq_2)
         k_mers(fa= path + output_file + '.fa', k=Args.k_num,s=Args.shift)
-        sort_table(input= './' + output_file + '_tmp.csv',
-                   output= './' + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
+        sort_table(input= path + output_file + '_tmp.csv',
+                   output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
         os.remove(path + output_file + '_tmp.csv')
         os.remove(path + output_file +'.fq')
         os.remove(path + output_file + '.fa')
@@ -165,6 +165,4 @@ if __name__ == "__main__":
     else:
         raise "Please add correct parameters!!!"
 
-        
-        
         
