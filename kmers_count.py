@@ -27,6 +27,19 @@ def fq2fa(fq1, fq2):
     os.system('cat %s %s > %s' % (fq1,fq2,path + output_file +'.fq'))
     os.system("sed -n '1~4s/^@/>/p;2~4p' %s > %s" % (path + output_file +'.fq',
                                                      path + output_file +'.fa'))
+def clean_fa(infile,outfile):
+    with open(infile) as f:
+        Dict = {}
+        for line in f:
+            if line[0] == ">":
+                key = line.strip()
+                Dict[key] = []
+            else:
+                Dict[key].append(line.strip())
+
+    with open(outfile, 'w') as o:
+        for key, value in Dict.items():
+            o.write("{}\n{}\n".format(key, ''.join(value)))
 
 
 def k_mers(fa,k,s):
@@ -180,7 +193,8 @@ if __name__ == "__main__":
         elif Args.fasta[0:3] == '../':
             dir = os.path.abspath(Args.fasta)
 
-        k_mers(fa= dir, k=Args.k_num, s=Args.shift)
+        clean_fa(infile=dir,outfile=path + output_file+'_clean.fa')
+        k_mers(fa= path + output_file+'_clean.fa', k=Args.k_num, s=Args.shift)
         sort_table(input= path + output_file + '_tmp.csv',
                output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
 
@@ -191,5 +205,6 @@ if __name__ == "__main__":
 
     else:
         raise "Please add correct parameters!!!"
+
         
         
