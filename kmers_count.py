@@ -120,12 +120,12 @@ if __name__ == "__main__":
             output_file = output_file.split('_')[0]
 
         fq2fa(Args.fq_1, Args.fq_2)
-        k_mers(fa= './' + output_file + '.fa', k=Args.k_num,s=Args.shift)
-        sort_table(input= './'  + output_file + '_tmp.csv',
-                   output= './'  + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
-        os.remove('./'  + output_file + '_tmp.csv')
-        os.remove("./" + output_file +'.fq')
-        os.remove("./" + output_file + '.fa')
+        k_mers(fa= path + output_file + '.fa', k=Args.k_num,s=Args.shift)
+        sort_table(input= './' + output_file + '_tmp.csv',
+                   output= './' + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
+        os.remove(path + output_file + '_tmp.csv')
+        os.remove(path + output_file +'.fq')
+        os.remove(path + output_file + '.fa')
 
         end = time.time()
         print(str(end-start) + 's')
@@ -152,11 +152,11 @@ if __name__ == "__main__":
             suffix = output_file.split('.')[1]
             output_file = output_file.split('.')[0]
             output_file = output_file.split('_')[0]
-        k_mers(fa='./' + output_file + '.' + suffix, k=Args.k_num, s=Args.shift)
-        sort_table(input= './' + output_file + '_tmp.csv',
-               output= './' + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
+        k_mers(fa=path + output_file + '.' + suffix, k=Args.k_num, s=Args.shift)
+        sort_table(input= path + output_file + '_tmp.csv',
+               output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
 
-        os.remove('./' + output_file + '_tmp.csv')
+        os.remove(path + output_file + '_tmp.csv')
 
 
         end = time.time()
