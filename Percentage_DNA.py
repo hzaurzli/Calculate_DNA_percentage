@@ -70,6 +70,7 @@ def k_mers(fa,k,s):
     result.to_csv('./' + output_file +'_tmp.csv')
     os.system("sed -i '1d' %s" % ('./' + output_file +'_tmp.csv'))
 
+
 def DNA_reversal_complement(sequence):
 
     comp_dict = {
@@ -85,6 +86,7 @@ def DNA_reversal_complement(sequence):
     string = ''.join(sequence_list)
     return string[::-1]
 
+
 def sort_table(input,output):
     dict_unsort = {}
 
@@ -92,24 +94,31 @@ def sort_table(input,output):
         reader = csv.reader(inp)
         dict_unsort = {rows[0]: rows[1] for rows in reader}
 
-    new_sys = sorted(dict_unsort.items(),key=lambda x:x[0])
-    dict_sort = dict(new_sys)
-    dict_sort_1 = dict(new_sys)
+    dict_unsort_1 = {}
 
-    with open(output, mode='w') as f:
-        for i in dict_sort.keys():
-            if 'N' in i:
-                pass
-            else:
-                rev_seq = DNA_reversal_complement(i)
-                if i in dict_sort_1.keys() and rev_seq in dict_sort_1.keys():
-                    line = i + ',' + str(int(dict_sort_1[i]) + int(dict_sort_1[rev_seq])) + '\n'
-                    del dict_sort_1[rev_seq]
-                    f.write(line)
-                elif i in dict_sort_1.keys() and rev_seq not in dict_sort_1.keys():
-                    line = i + ',' + str(int(dict_sort_1[i])) + '\n'
-                    f.write(line)
-    f.close()
+    for i in dict_unsort.keys():
+        if 'N' in i:
+            pass
+        else:
+            rev_seq = DNA_reversal_complement(i)
+            if i in dict_unsort.keys() and rev_seq in dict_unsort.keys():
+                if i < rev_seq or i == rev_seq:
+                    dict_unsort_1[i] = int(dict_unsort[i]) + int(dict_unsort[rev_seq])
+                elif i > rev_seq:
+                    dict_unsort_1[rev_seq] = int(dict_unsort[i]) + int(dict_unsort[rev_seq])
+            elif i in dict_unsort.keys() and rev_seq not in dict_unsort.keys():
+                if i < rev_seq or i == rev_seq:
+                    dict_unsort_1[i] = int(dict_unsort[i])
+                elif i > rev_seq:
+                    dict_unsort_1[rev_seq] = int(dict_unsort[i])
+
+    new_sys = sorted(dict_unsort_1.items(), key=lambda x: x[0])
+    dict_sort = dict(new_sys)
+
+    df = pd.DataFrame.from_dict(dict_sort,orient='index',columns=['num'])
+    df = df.reset_index().rename(columns={'index': 'seq'})
+    df.to_csv(output,header=None,index=None)
+    
 
 
 class mapping:
@@ -303,8 +312,6 @@ if __name__ == "__main__":
     os.remove(Args.workdir + output_file + '.fa')
     os.remove(Args.workdir + output_file + '.fq')
     os.remove(Args.workdir + output_file + '_tmp.csv')
-
-
 
 
 
