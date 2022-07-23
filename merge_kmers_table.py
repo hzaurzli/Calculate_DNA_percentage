@@ -6,7 +6,7 @@ import argparse
 def merge_file(indir,outfile,n):
     lis = []
     file_dir = indir
-    files = os.listdir(file_dir)
+    files = sorted(os.listdir(file_dir))
     df1 = pd.read_csv(os.path.join(file_dir, files[0]), header=None)
     e = files[0].split('.')[0]
     lis.append('seq')
@@ -14,7 +14,7 @@ def merge_file(indir,outfile,n):
     df1.columns = ['seq', 'num']
 
     for i in files[1:]:
-        df2 = pd.read_csv(os.path.join(file_dir, i))
+        df2 = pd.read_csv(os.path.join(file_dir, i),header=None)
         i = i.split('.')[0]
         lis.append(i)
         df2.columns = ['seq', 'num']
@@ -37,6 +37,7 @@ def merge_file(indir,outfile,n):
     df1['row_sum'] = ll
     df1 = df1[df1['row_sum'] > int(n) - 1]
     del df1['row_sum']
+    df1.round(0)
     df1.to_csv(outfile,header=1,index=1,sep='\t')
 
 if __name__ == "__main__":
