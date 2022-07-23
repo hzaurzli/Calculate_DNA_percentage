@@ -40,7 +40,17 @@ Options:
 
 ```
 
+## some useful tools：
 kmers diversity:
 ```
 ~/miniconda3/bin/python3 ~/pycharm/venv/kmers_count.py -fq1 MB-1_R1.fq -fq2 MB-1_R2.fq -k 20 -s 3
+```
+
+merge all kmers tables：
+```
+ ~/miniconda3/bin/python3 ~/pycharm/venv/merge_kmers_table.py -i ~/kmers/ -o ~/test.xls -n 2
+ ## -i input directory of kmers tables
+ ## -o final table(merge table)
+ ## -n kmers sequences at least exist in n kmers table
+ 
 ```
