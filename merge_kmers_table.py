@@ -38,7 +38,8 @@ def merge_file(indir,outfile,n):
     df1 = df1[df1['row_sum'] > int(n) - 1]
     del df1['row_sum']
     df1.round(0)
-    df1.to_csv(outfile,header=1,index=1,sep='\t')
+    df1.sort_index(inplace=True)
+    df1.to_csv(outfile,header=1,index=1,sep='\t',float_format='%.0f')
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="")
