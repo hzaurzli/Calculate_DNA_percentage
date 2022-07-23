@@ -51,7 +51,7 @@ def k_mers(fa,k,s):
             if line.startswith(">"):
                 pass
             else:
-                for i in range(0, len(line) - k_seq - 1, int(s)+1):
+                for i in range(0, len(line) - k_seq, int(s)+1):
                     seq = line[i:i + k_seq]
                     seq_list.append(seq)
 
