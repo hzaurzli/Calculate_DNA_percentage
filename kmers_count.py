@@ -21,14 +21,34 @@ def fq2fa(fq1, fq2):
             lines = lines + line
         path = sub.getoutput('pwd') + '/'
         output_file = list_path[len(list_path) - 1]
-        output_file = output_file.split('.')[0]
-        output_file = output_file.split('_')[0]
+        if len(output_file.split('.')) == 2:
+            output_file = output_file.split('.')[0]
+            os.system("cat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa'))
 
-    os.system('cat %s %s > %s' % (fq1,fq2,path + output_file +'.fq'))
-    os.system("sed -n '1~4s/^@/>/p;2~4p' %s > %s" % (path + output_file +'.fq',
-                                                     path + output_file +'.fa'))
+        if len(output_file.split('.')) == 3 and output_file.split('.')[2] == 'gz':
+            output_file = output_file.split('.')[0]
+            os.system("zcat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa.gz'))
+
+
+
 def clean_fa(infile,outfile):
     with open(infile) as f:
+        Dict = {}
+        for line in f:
+            if line[0] == ">":
+                key = line.strip()
+                Dict[key] = []
+            else:
+                Dict[key].append(line.strip())
+
+    with open(outfile, 'w') as o:
+        for key, value in Dict.items():
+            o.write("{}\n{}\n".format(key, ''.join(value)))
+
+
+def clean_fa_gz(infile,outfile):
+    import gzip
+    with gzip.open(infile) as f:
         Dict = {}
         for line in f:
             if line[0] == ">":
@@ -59,6 +79,23 @@ def k_mers(fa,k,s):
     result.to_csv(path + output_file +'_tmp.csv')
     os.system("sed -i '1d' %s" % (path + output_file +'_tmp.csv'))
 
+def k_mers_gz(fa,k,s):
+    import gzip
+    with gzip.open(fa, "r") as sequences:
+        lines = sequences.readlines()
+        k_seq = int(k)
+        seq_list = []
+        for line in lines:
+            if line.startswith(">"):
+                pass
+            else:
+                for i in range(0, len(line) - k_seq, int(s)+1):
+                    seq = line[i:i + k_seq]
+                    seq_list.append(seq)
+
+    result = pd.value_counts(seq_list)
+    result.to_csv(path + output_file +'_tmp.csv')
+    os.system("sed -i '1d' %s" % (path + output_file +'_tmp.csv'))
 
 def DNA_reversal_complement(sequence):
 
@@ -136,7 +173,6 @@ if __name__ == "__main__":
             path = sub.getoutput('pwd') + '/'
             output_file = list_path[len(list_path) - 1]
             output_file = output_file.split('.')[0]
-            output_file = output_file.split('_')[0]
 
         if Args.fq_1[0:2] == './':
             dir_1 = os.path.abspath(Args.fq_1)
@@ -157,12 +193,20 @@ if __name__ == "__main__":
             dir_2 = os.path.abspath(Args.fq_2)
 
         fq2fa(dir_1, dir_2)
-        k_mers(fa= path + output_file + '.fa', k=Args.k_num,s=Args.shift)
-        sort_table(input= path + output_file + '_tmp.csv',
-                   output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
-        os.remove(path + output_file + '_tmp.csv')
-        os.remove(path + output_file +'.fq')
-        os.remove(path + output_file + '.fa')
+        if len(list_path[len(list_path) - 1]) == 3 and list_path[len(list_path) - 1][2] == 'gz':
+            k_mers_gz(fa=path + output_file + '.fa.gz', k=Args.k_num, s=Args.shift)
+            sort_table(input=path + output_file + '_tmp.csv',
+                       output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
+            os.remove(path + output_file + '_tmp.csv')
+            os.remove(path + output_file + '.fq')
+            os.remove(path + output_file + '.fa.gz')
+        else:
+            k_mers(fa=path + output_file + '.fa', k=Args.k_num, s=Args.shift)
+            sort_table(input=path + output_file + '_tmp.csv',
+                       output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
+            os.remove(path + output_file + '_tmp.csv')
+            os.remove(path + output_file + '.fq')
+            os.remove(path + output_file + '.fa')
 
         end = time.time()
         print(str(end-start) + 's')
@@ -199,7 +243,10 @@ if __name__ == "__main__":
         elif Args.fasta[0:3] == '../':
             dir = os.path.abspath(Args.fasta)
 
-        clean_fa(infile=dir,outfile=path + output_file+'_clean.fa')
+        if len(list_path[len(list_path) - 1]) == 3 and list_path[len(list_path) - 1][2] == 'gz':
+            clean_fa_gz(infile=dir, outfile=path + output_file + '_clean.fa')
+        else:
+            clean_fa(infile=dir, outfile=path + output_file + '_clean.fa')
         k_mers(fa= path + output_file+'_clean.fa', k=Args.k_num, s=Args.shift)
         sort_table(input= path + output_file + '_tmp.csv',
                output= path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
@@ -211,5 +258,3 @@ if __name__ == "__main__":
 
     else:
         raise "Please add correct parameters!!!"
-        
-        
