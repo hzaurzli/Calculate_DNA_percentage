@@ -23,11 +23,15 @@ def fq2fa(fq1, fq2):
         output_file = list_path[len(list_path) - 1]
         if len(output_file.split('.')) == 2:
             output_file = output_file.split('.')[0]
+            output_file = output_file.split('_')[0:len(output_file)-1]
+            output_file = '_'.join(output_file)
             os.system("cat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa'))
 
         if len(output_file.split('.')) == 3 and output_file.split('.')[2] == 'gz':
             output_file = output_file.split('.')[0]
-            os.system("zcat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa.gz'))
+            output_file = output_file.split('_')[0:len(output_file) - 1]
+            output_file = '_'.join(output_file)
+            os.system("zcat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa'))
 
 
 
@@ -80,8 +84,7 @@ def k_mers(fa,k,s):
     os.system("sed -i '1d' %s" % (path + output_file +'_tmp.csv'))
 
 def k_mers_gz(fa,k,s):
-    import gzip
-    with gzip.open(fa, "r") as sequences:
+    with open(fa, "r") as sequences:
         lines = sequences.readlines()
         k_seq = int(k)
         seq_list = []
@@ -172,6 +175,8 @@ if __name__ == "__main__":
             path = sub.getoutput('pwd') + '/'
             li = list_path[len(list_path) - 1]
             output_file = li.split('.')[0]
+            output_file = output_file.split('_')[0:len(output_file) - 1]
+            output_file = '_'.join(output_file)
 
         if Args.fq_1[0:2] == './':
             dir_1 = os.path.abspath(Args.fq_1)
@@ -193,7 +198,7 @@ if __name__ == "__main__":
 
         fq2fa(dir_1, dir_2)
         if len(li.split('.')) == 3 and li.split('.')[2] == 'gz':
-            k_mers_gz(fa=path + output_file + '.fa.gz', k=Args.k_num, s=Args.shift)
+            k_mers_gz(fa=path + output_file + '.fa', k=Args.k_num, s=Args.shift)
             sort_table(input=path + output_file + '_tmp.csv',
                        output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
             os.remove(path + output_file + '_tmp.csv')
@@ -230,7 +235,7 @@ if __name__ == "__main__":
             li = list_path[len(list_path) - 1]
             suffix = li.split('.')[1]
             output_file = li.split('.')[0]
-            
+
 
         if Args.fasta[0:2] == './':
             dir = os.path.abspath(Args.fasta)
