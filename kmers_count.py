@@ -10,9 +10,10 @@ def fq2fa(fq1, fq2):
     list_path = file_path.split('/')
     list_path = [i for i in list_path if i != '']
     if len(list_path) == 1:
-        output_file = list_path[0]
-        output_file = output_file.split('.')[0]
-        output_file = output_file.split('_')[0]
+        li = list_path[0]
+        output_file = li.split('.')[0]
+        output_file = output_file.split('_')[0:len(output_file) - 3]
+        output_file = '_'.join(output_file)
         path = sub.getoutput('pwd') + '/'
     else:
         lines = ""
@@ -20,16 +21,18 @@ def fq2fa(fq1, fq2):
             line = "/" + list_path[i]
             lines = lines + line
         path = sub.getoutput('pwd') + '/'
-        output_file = list_path[len(list_path) - 1]
-        if len(output_file.split('.')) == 2:
-            output_file = output_file.split('.')[0]
-            output_file = output_file.split('_')[0:len(output_file)-1]
+        li = list_path[len(list_path) - 1]
+        if len(li.split('.')) == 2:
+            output_file = li.split('.')[0]
+            output_file = output_file.split('_')
+            output_file = output_file[0:len(output_file)-1]
             output_file = '_'.join(output_file)
             os.system("cat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa'))
 
-        if len(output_file.split('.')) == 3 and output_file.split('.')[2] == 'gz':
-            output_file = output_file.split('.')[0]
-            output_file = output_file.split('_')[0:len(output_file) - 1]
+        if len(li.split('.')) == 3 and li.split('.')[2] == 'gz':
+            output_file = li.split('.')[0]
+            output_file = output_file.split('_')
+            output_file = output_file[0:len(output_file) - 1]
             output_file = '_'.join(output_file)
             os.system("zcat %s %s | sed -n '1~4s/^@/>/p;2~4p' > %s" % (fq1, fq2, path + output_file + '.fa'))
 
@@ -52,7 +55,7 @@ def clean_fa(infile,outfile):
 
 def clean_fa_gz(infile,outfile):
     import gzip
-    with gzip.open(infile) as f:
+    with gzip.open(infile,'rt') as f:
         Dict = {}
         for line in f:
             if line[0] == ">":
@@ -67,23 +70,6 @@ def clean_fa_gz(infile,outfile):
 
 
 def k_mers(fa,k,s):
-    with open(fa, "r") as sequences:
-        lines = sequences.readlines()
-        k_seq = int(k)
-        seq_list = []
-        for line in lines:
-            if line.startswith(">"):
-                pass
-            else:
-                for i in range(0, len(line) - k_seq, int(s)+1):
-                    seq = line[i:i + k_seq]
-                    seq_list.append(seq)
-
-    result = pd.value_counts(seq_list)
-    result.to_csv(path + output_file +'_tmp.csv')
-    os.system("sed -i '1d' %s" % (path + output_file +'_tmp.csv'))
-
-def k_mers_gz(fa,k,s):
     with open(fa, "r") as sequences:
         lines = sequences.readlines()
         k_seq = int(k)
@@ -166,6 +152,9 @@ if __name__ == "__main__":
         if len(list_path) == 1:
             li = list_path[0]
             output_file = li.split('.')[0]
+            output_file = output_file.split('_')
+            output_file = output_file[0:len(output_file) - 1]
+            output_file = '_'.join(output_file)
             path = sub.getoutput('pwd') + '/'
         else:
             lines = ""
@@ -175,7 +164,8 @@ if __name__ == "__main__":
             path = sub.getoutput('pwd') + '/'
             li = list_path[len(list_path) - 1]
             output_file = li.split('.')[0]
-            output_file = output_file.split('_')[0:len(output_file) - 1]
+            output_file = output_file.split('_')
+            output_file = output_file[0:len(output_file) - 1]
             output_file = '_'.join(output_file)
 
         if Args.fq_1[0:2] == './':
@@ -197,21 +187,11 @@ if __name__ == "__main__":
             dir_2 = os.path.abspath(Args.fq_2)
 
         fq2fa(dir_1, dir_2)
-        if len(li.split('.')) == 3 and li.split('.')[2] == 'gz':
-            k_mers_gz(fa=path + output_file + '.fa', k=Args.k_num, s=Args.shift)
-            sort_table(input=path + output_file + '_tmp.csv',
-                       output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
-            os.remove(path + output_file + '_tmp.csv')
-            os.remove(path + output_file + '.fq')
-            os.remove(path + output_file + '.fa.gz')
-        elif len(li.split('.')) == 2:
-            k_mers(fa=path + output_file + '.fa', k=Args.k_num, s=Args.shift)
-            sort_table(input=path + output_file + '_tmp.csv',
-                       output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
-            os.remove(path + output_file + '_tmp.csv')
-            os.remove(path + output_file + '.fq')
-            os.remove(path + output_file + '.fa')
-
+        k_mers(fa=path + output_file + '.fa', k=Args.k_num, s=Args.shift)
+        sort_table(input=path + output_file + '_tmp.csv',
+                   output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
+        os.remove(path + output_file + '_tmp.csv')
+        os.remove(path + output_file + '.fa')
         end = time.time()
         print(str(end-start) + 's')
 
