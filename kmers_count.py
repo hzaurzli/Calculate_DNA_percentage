@@ -146,7 +146,7 @@ def sort_table(input,output):
     df.to_csv(output,header=None,index=None)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="DNA persentage")
+    parser = argparse.ArgumentParser(description="kmers count")
     parser.add_argument("-fq1", "--fq_1", required=False, type=str, help="Input Fastq1")
     parser.add_argument("-fq2", "--fq_2", required=False, type=str, help="Input Fastq2")
     parser.add_argument("-fa", "--fasta", required=False, type=str, help="Input Fasta")
@@ -161,9 +161,8 @@ if __name__ == "__main__":
         list_path = file_path.split('/')
         list_path = [i for i in list_path if i != '']
         if len(list_path) == 1:
-            output_file = list_path[0]
-            output_file = output_file.split('.')[0]
-            output_file = output_file.split('_')[0]
+            li = list_path[0]
+            output_file = li.split('.')[0]
             path = sub.getoutput('pwd') + '/'
         else:
             lines = ""
@@ -171,8 +170,8 @@ if __name__ == "__main__":
                 line = "/" + list_path[i]
                 lines = lines + line
             path = sub.getoutput('pwd') + '/'
-            output_file = list_path[len(list_path) - 1]
-            output_file = output_file.split('.')[0]
+            li = list_path[len(list_path) - 1]
+            output_file = li.split('.')[0]
 
         if Args.fq_1[0:2] == './':
             dir_1 = os.path.abspath(Args.fq_1)
@@ -193,14 +192,14 @@ if __name__ == "__main__":
             dir_2 = os.path.abspath(Args.fq_2)
 
         fq2fa(dir_1, dir_2)
-        if len(list_path[len(list_path) - 1]) == 3 and list_path[len(list_path) - 1][2] == 'gz':
+        if len(li.split('.')) == 3 and li.split('.')[2] == 'gz':
             k_mers_gz(fa=path + output_file + '.fa.gz', k=Args.k_num, s=Args.shift)
             sort_table(input=path + output_file + '_tmp.csv',
                        output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
             os.remove(path + output_file + '_tmp.csv')
             os.remove(path + output_file + '.fq')
             os.remove(path + output_file + '.fa.gz')
-        else:
+        elif len(li.split('.')) == 2:
             k_mers(fa=path + output_file + '.fa', k=Args.k_num, s=Args.shift)
             sort_table(input=path + output_file + '_tmp.csv',
                        output=path + output_file + '_k' + Args.k_num + '_s' + Args.shift + '.csv')
@@ -218,10 +217,9 @@ if __name__ == "__main__":
         list_path = file_path.split('/')
         list_path = [i for i in list_path if i != '']
         if len(list_path) == 1:
-            output_file = list_path[0]
-            suffix = output_file.split('.')[1]
-            output_file = output_file.split('.')[0]
-            output_file = output_file.split('_')[0]
+            li = list_path[0]
+            suffix = li.split('.')[1]
+            output_file = li.split('.')[0]
             path = sub.getoutput('pwd') + '/'
         else:
             lines = ""
@@ -229,10 +227,10 @@ if __name__ == "__main__":
                 line = "/" + list_path[i]
                 lines = lines + line
             path = sub.getoutput('pwd') + '/'
-            output_file = list_path[len(list_path) - 1]
-            suffix = output_file.split('.')[1]
-            output_file = output_file.split('.')[0]
-            output_file = output_file.split('_')[0]
+            li = list_path[len(list_path) - 1]
+            suffix = li.split('.')[1]
+            output_file = li.split('.')[0]
+            
 
         if Args.fasta[0:2] == './':
             dir = os.path.abspath(Args.fasta)
@@ -243,9 +241,9 @@ if __name__ == "__main__":
         elif Args.fasta[0:3] == '../':
             dir = os.path.abspath(Args.fasta)
 
-        if len(list_path[len(list_path) - 1]) == 3 and list_path[len(list_path) - 1][2] == 'gz':
+        if len(li.split('.')) == 3 and li.split('.')[2] == 'gz':
             clean_fa_gz(infile=dir, outfile=path + output_file + '_clean.fa')
-        else:
+        elif len(li.split('.')) == 2:
             clean_fa(infile=dir, outfile=path + output_file + '_clean.fa')
         k_mers(fa= path + output_file+'_clean.fa', k=Args.k_num, s=Args.shift)
         sort_table(input= path + output_file + '_tmp.csv',
@@ -258,3 +256,5 @@ if __name__ == "__main__":
 
     else:
         raise "Please add correct parameters!!!"
+
+        
