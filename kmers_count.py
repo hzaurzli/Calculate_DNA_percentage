@@ -416,6 +416,7 @@ if __name__ == "__main__":
                                   header=0,index=1,float_format='%.0f')
 
             os.system('rm -r %s' % (path + output_file + '_index'))
+            os.remove(path + output_file + '.fa')
             end = time.time()
             print(str(end - start) + 's')
 
@@ -489,8 +490,11 @@ if __name__ == "__main__":
                                   header=0, index=1, float_format='%.0f')
 
             os.system('rm -r %s' % (path + output_file + '_index'))
+            os.remove(path + output_file + '_clean.fa')
             end = time.time()
             print(str(end - start) + 's')
-            
+
         else:
             raise "Please add correct parameters!!!"
+
+
