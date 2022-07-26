@@ -118,7 +118,7 @@ def sort_table(input,output):
     df = pd.DataFrame.from_dict(dict_sort,orient='index',columns=['num'])
     df = df.reset_index().rename(columns={'index': 'seq'})
     df.to_csv(output,header=None,index=None)
-    
+
 
 
 class mapping:
@@ -163,6 +163,7 @@ if __name__ == "__main__":
     parser.add_argument("-k", "--k_num", required=True, type=str, help="kmers number")
     parser.add_argument("-fq1", "--fq_1", required=True, type=str, help="Input Fastq1")
     parser.add_argument("-fq2", "--fq_2", required=True, type=str, help="Input Fastq2")
+    parser.add_argument("-s", "--shift", required=True, type=str, help="kmers shift number")
     Args = parser.parse_args()
 
     mp = mapping()
