@@ -53,7 +53,7 @@ def fq2fa(fq1, fq2):
                                                     Args.workdir + output_file +'.fa'))
 
 
-def k_mers(fa,k,s):
+def k_mers(fa,k,s,path_file):
     with open(fa, "r") as sequences:
         lines = sequences.readlines()
         k_seq = int(k)
@@ -67,8 +67,8 @@ def k_mers(fa,k,s):
                     seq_list.append(seq)
 
     result = pd.value_counts(seq_list)
-    result.to_csv('./' + output_file +'_tmp.csv')
-    os.system("sed -i '1d' %s" % ('./' + output_file +'_tmp.csv'))
+    result.to_csv(path_file +'_tmp.csv')
+    os.system("sed -i '1d' %s" % (path_file +'_tmp.csv'))
 
 
 def DNA_reversal_complement(sequence):
@@ -226,7 +226,8 @@ if __name__ == "__main__":
 
             # step6 kmers statstic
             print('kmers table!!!')
-            k_mers(fa=Args.workdir + output_file + '.fa', k=Args.k_num,s=Args.shift)
+            k_mers(fa=Args.workdir + output_file + '.fa', k=Args.k_num, s=Args.shift,
+                   path_file=Args.workdir + output_file)
             sort_table(input=Args.workdir + output_file +'_tmp.csv',
                        output=Args.workdir + output_file +'.csv')
 
@@ -302,7 +303,8 @@ if __name__ == "__main__":
 
             # step7 kmers statstic
             print('kmers table!!!')
-            k_mers(fa=Args.workdir + output_file +'.fa',k=Args.k_num,s=Args.shift)
+            k_mers(fa=Args.workdir + output_file + '.fa', k=Args.k_num,s=Args.shift,
+                   path_file=Args.workdir + output_file)
             sort_table(input=Args.workdir + output_file + '_tmp.csv',
                        output=Args.workdir + output_file + '.csv')
 
@@ -313,7 +315,5 @@ if __name__ == "__main__":
     os.remove(Args.workdir + output_file + '.fa')
     os.remove(Args.workdir + output_file + '.fq')
     os.remove(Args.workdir + output_file + '_tmp.csv')
-
-
 
 
