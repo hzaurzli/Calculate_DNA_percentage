@@ -52,5 +52,5 @@ merge all kmers tables：
  ## -i input directory of kmers tables
  ## -o final table(merge table)
  ## -n kmers sequences at least exist in n kmers table
- 
+ ## -m 20G limitation of memory
 ```
