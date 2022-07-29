@@ -1,18 +1,11 @@
 #include <iostream>
-#include <algorithm>
 #include <valarray>
 #include <vector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <iostream>
 #include <algorithm>
-#include <valarray>
-#include <vector>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <map>
 #include <cassert>
 
@@ -23,20 +16,20 @@ using namespace std;
 
 int debug;
 
-void show_version(char* name)
+void show_version(char* names)
 {
-    printf("%s by Late Lee, version: 1.0\n", name);
+    printf("%s by Small runze, version: 1.0\n", names);
 }
 
 
-void usage(char* name)
+void usage(char* names)
 {
-    show_version(name);
+    show_version(names);
 
-    printf("         -h,  --help           short help\n");
+    printf("         -h,  --help       short help\n");
     printf("         -i,  --seq        show version\n");
-    printf("         -n,  --kmer        show kmer number\n");
-    printf("         -s,  --shift        show shift number\n");
+    printf("         -n,  --kmer       show kmer number\n");
+    printf("         -s,  --shift      show shift number\n");
 }
 
 
@@ -142,6 +135,7 @@ int main(int argc, char *argv[])
          if ((strcmp(argv[i], "-h")==0) || (strcmp(argv[i], "--help")==0))
          {
              usage(argv[i]);
+	     return 0;
          }
          if ((strcmp(argv[i], "-i")==0) || (strcmp(argv[i], "--seq")==0))
          {
@@ -158,49 +152,51 @@ int main(int argc, char *argv[])
          {
              shift=argv[i+1];
          }
-
     }
     
-    float num = atof(number);
-    float st = atof(shift);
- 
-
-    std::vector<std::string> vs;
-    vs = split_char(seq,num,st);
-
-    //string
-    //define map(key and value)    
-    map<string, int> vsDst;
-    check(vs, vsDst);
-    //define map iterator
-    map<string, int>::iterator it1;
-    map<string, int>::iterator it2;
-    
-
-    for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
+    string snum = number;
+   
+    if(!snum.empty())
     {
-	 for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
-   	 {
-		 if((*it1).first == DNA_complement((*it2).first))
-		 {
-			it1 = vsDst.find((*it1).first);
-			it2 = vsDst.find(DNA_complement((*it2).first));
-			//map get key(first) and value(second)			
-			string name = it1->first;
-			int val_1 = it1->second;
-			int val_2 = it2->second;
-			//cout << name << ":" << val_1 + val_2 << endl;
-			vsDst.erase(DNA_complement((*it2).first));
-			vsDst[(*it1).first] = val_1 + val_2;
-		 } 
-	 }
+    	float num = atof(number);
+    	float st = atof(shift);
 
-	//cout << (*it1).first << "," << (*it1).second << endl;
-    }
+	std::vector<std::string> vs;
+        vs = split_char(seq,num,st);
 
-    for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-    {
-    	cout << (*it1).first << "," << (*it1).second << endl;
+    	//string
+    	//define map(key and value)
+    	map<string, int> vsDst;
+    	check(vs, vsDst);
+    	//define map iterator
+    	map<string, int>::iterator it1;
+    	map<string, int>::iterator it2;
+
+
+	for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
+        {
+             for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+             {
+                     if((*it1).first == DNA_complement((*it2).first))
+                     {
+                          it1 = vsDst.find((*it1).first);
+                          it2 = vsDst.find(DNA_complement((*it2).first));
+                          //map get key(first) and value(second)
+                          string name = it1->first;
+                          int val_1 = it1->second;
+                          int val_2 = it2->second;
+                          //cout << name << ":" << val_1 + val_2 << endl;
+                          vsDst.erase(DNA_complement((*it2).first));
+                          vsDst[(*it1).first] = val_1 + val_2;
+                      }
+             }
+
+        }
+
+	for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
+        {
+    		cout << (*it1).first << "," << (*it1).second << endl;
+        }
     }
 
   return 1;
