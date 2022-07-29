@@ -35,7 +35,8 @@ void usage(char* name)
 
     printf("         -h,  --help           short help\n");
     printf("         -i,  --seq        show version\n");
-    printf("         -n,  --num        show char\n");
+    printf("         -n,  --kmer        show kmer number\n");
+    printf("         -s,  --shift        show shift number\n");
 }
 
 
@@ -77,11 +78,18 @@ vector<string> split_char(char* seq,float len,float shift)
     int l = len;	
     string s=seq;
     int s_length = s.length();
+    string N = "N";
 
     std::vector<std::string> values;
     for(int i = 0; i < s_length-l+1; i=i+1+shift)
     {
-	 values.push_back(s.substr(i,l));
+    	    string::size_type idx;
+	    string sn = s.substr(i,l);
+            idx=sn.find(N);
+	    if(idx == string::npos)
+            {
+	    	values.push_back(sn);
+	    }
     }
 
     return values;
@@ -140,7 +148,7 @@ int main(int argc, char *argv[])
 	     seq=argv[i+1];
 
          }
-	 if ((strcmp(argv[i], "-n")==0) || (strcmp(argv[i], "--num")==0))
+	 if ((strcmp(argv[i], "-k")==0) || (strcmp(argv[i], "--kmer")==0))
        	 {
              number=argv[i+1];
 	 
@@ -168,12 +176,13 @@ int main(int argc, char *argv[])
     map<string, int>::iterator it1;
     map<string, int>::iterator it2;
     
+
     for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
     {
 	 for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
    	 {
-	 	if((*it1).first == DNA_complement((*it2).first))
-		{
+		 if((*it1).first == DNA_complement((*it2).first))
+		 {
 			it1 = vsDst.find((*it1).first);
 			it2 = vsDst.find(DNA_complement((*it2).first));
 			//map get key(first) and value(second)			
@@ -183,7 +192,7 @@ int main(int argc, char *argv[])
 			//cout << name << ":" << val_1 + val_2 << endl;
 			vsDst.erase(DNA_complement((*it2).first));
 			vsDst[(*it1).first] = val_1 + val_2;
-		}
+		 } 
 	 }
 
 	//cout << (*it1).first << "," << (*it1).second << endl;
