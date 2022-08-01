@@ -45,6 +45,10 @@ def memory(infile,m,name):
         fa = infile
         nrow = sub.getoutput('cat %s | wc -l' % (fa))
         a = round(int(nrow) / n, 0)
+        if a < 1:
+            a = 2
+        else:
+            a = a
         dir = sub.getoutput('pwd')
         if os.path.isdir(dir + '/' + name + '_index') == True:
             os.system('rm -r %s' % (dir + '/' + name + '_index'))
@@ -63,6 +67,10 @@ def memory(infile,m,name):
         fa = infile
         nrow = sub.getoutput('cat %s | wc -l' % (fa))
         a = round(int(nrow) / n, 0)
+        if a < 1:
+            a = 2
+        else:
+            a = a
         dir = sub.getoutput('pwd')
         if os.path.isdir(dir + '/' + name + '_index') == True:
             os.system('rm -r %s' % (dir + '/' + name + '_index'))
@@ -81,6 +89,10 @@ def memory(infile,m,name):
         fa = infile
         nrow = sub.getoutput('cat %s | wc -l' % (fa))
         a = round(int(nrow) / n, 0)
+        if a < 1:
+            a = 2
+        else:
+            a = a
         dir = sub.getoutput('pwd')
         if os.path.isdir(dir + '/' + name + '_index') == True:
             os.system('rm -r %s' % (dir + '/' + name + '_index'))
@@ -94,11 +106,15 @@ def memory(infile,m,name):
             # print(spl)
             os.system("sed -n %s %s > %s" % (spl, fa, dir + '/' + name + '_index/' + name + '_' + spl + '.index'))
 
-    elif 40 < int(m) < 60 or int(m) == 60:
+    elif 60 < int(m) < 80 or int(m) == 80:
         n = 10
         fa = infile
         nrow = sub.getoutput('cat %s | wc -l' % (fa))
         a = round(int(nrow) / n, 0)
+        if a < 1:
+            a = 2
+        else:
+            a = a
         dir = sub.getoutput('pwd')
         if os.path.isdir(dir + '/' + name + '_index') == True:
             os.system('rm -r %s' % (dir + '/' + name + '_index'))
@@ -112,11 +128,15 @@ def memory(infile,m,name):
             # print(spl)
             os.system("sed -n %s %s > %s" % (spl, fa, dir + '/' + name + '_index/' + name + '_' + spl + '.index'))
 
-    elif int(m) > 60:
+    elif int(m) > 80:
         n = 5
         fa = infile
         nrow = sub.getoutput('cat %s | wc -l' % (fa))
         a = round(int(nrow) / n, 0)
+        if a < 1:
+            a = 2
+        else:
+            a = a
         dir = sub.getoutput('pwd')
         if os.path.isdir(dir + '/' + name + '_index') == True:
             os.system('rm -r %s' % (dir + '/' + name + '_index'))
@@ -398,14 +418,15 @@ if __name__ == "__main__":
             lis.append('seq')
             lis.append(e)
             df1.columns = ['seq', 'num']
-            for i in files_csv[1:]:
-                df2 = pd.read_csv(os.path.join(path_index, i), header=None)
-                i = i.split('.')[0]
-                lis.append(i)
-                df2.columns = ['seq', 'num']
-                df1 = pd.merge(df1, df2, on='seq', how='outer')
+            if len(files_csv) != 1:
+                for i in files_csv[1:]:
+                    df2 = pd.read_csv(os.path.join(path_index, i), header=None)
+                    i = i.split('.')[0]
+                    lis.append(i)
+                    df2.columns = ['seq', 'num']
+                    df1 = pd.merge(df1, df2, on='seq', how='outer')
 
-            del df2
+                del df2
             df1.columns = lis
             df1 = df1.set_index('seq', drop=True, append=False,
                                 inplace=False, verify_integrity=False)
@@ -472,14 +493,15 @@ if __name__ == "__main__":
             lis.append('seq')
             lis.append(e)
             df1.columns = ['seq', 'num']
-            for i in files_csv[1:]:
-                df2 = pd.read_csv(os.path.join(path_index, i), header=None)
-                i = i.split('.')[0]
-                lis.append(i)
-                df2.columns = ['seq', 'num']
-                df1 = pd.merge(df1, df2, on='seq', how='outer')
+            if len(files_csv) != 1:
+                for i in files_csv[1:]:
+                    df2 = pd.read_csv(os.path.join(path_index, i), header=None)
+                    i = i.split('.')[0]
+                    lis.append(i)
+                    df2.columns = ['seq', 'num']
+                    df1 = pd.merge(df1, df2, on='seq', how='outer')
 
-            del df2
+                del df2
             df1.columns = lis
             df1 = df1.set_index('seq', drop=True, append=False,
                                 inplace=False, verify_integrity=False)
