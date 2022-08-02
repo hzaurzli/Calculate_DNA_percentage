@@ -475,7 +475,7 @@ int main(int argc, char *argv[])
     }
     
     else{
-      printf("Please add correct paramters,-f or -s!\n");
+      printf("Please add correct paramters,-f or -i!\n");
     }
     
     
