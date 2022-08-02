@@ -199,25 +199,17 @@ int main(int argc, char *argv[])
           check(vs, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
-            {
-              if((*it1).first == DNA_complement((*it2).first))
+          { 
+              string DNA_com = DNA_complement((*it1).first);
+              if(vsDst.find(DNA_com) != vsDst.end())
               {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
+                 int val_1 = it1->second;
+                 int val_2 = vsDst[DNA_com];
+                 vsDst.erase(DNA_com);
+                 vsDst[(*it1).first] = val_1 + val_2;
               }
-            }
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
@@ -236,24 +228,16 @@ int main(int argc, char *argv[])
           check(vs, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
@@ -276,26 +260,17 @@ int main(int argc, char *argv[])
           check(vs, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
-            
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
@@ -314,24 +289,16 @@ int main(int argc, char *argv[])
           check(vs, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
@@ -369,26 +336,17 @@ int main(int argc, char *argv[])
           check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
-            
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
@@ -417,26 +375,17 @@ int main(int argc, char *argv[])
           check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
-            
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
@@ -467,26 +416,17 @@ int main(int argc, char *argv[])
           check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
-            
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
@@ -514,26 +454,17 @@ int main(int argc, char *argv[])
           check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          map<string, int>::iterator it2;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
-            for (it2 = vsDst.begin(); it2 != vsDst.end(); ++it2)
+          { 
+            string DNA_com = DNA_complement((*it1).first);
+            if(vsDst.find(DNA_com) != vsDst.end())
             {
-              if((*it1).first == DNA_complement((*it2).first))
-              {
-                it1 = vsDst.find((*it1).first);
-                it2 = vsDst.find(DNA_complement((*it2).first));
-                //map get key(first) and value(second)
-                string name = it1->first;
-                int val_1 = it1->second;
-                int val_2 = it2->second;
-                //cout << name << ":" << val_1 + val_2 << endl;
-                vsDst.erase(DNA_complement((*it2).first));
-                vsDst[(*it1).first] = val_1 + val_2;
-              }
+              int val_1 = it1->second;
+              int val_2 = vsDst[DNA_com];
+              vsDst.erase(DNA_com);
+              vsDst[(*it1).first] = val_1 + val_2;
             }
-            
           }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
