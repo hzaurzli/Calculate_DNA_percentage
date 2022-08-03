@@ -34,7 +34,7 @@ void usage(char* names)
     printf("         -h,  --help       short help\n");
     printf("         -i,  --seq        show sequence\n");
     printf("         -f,  --file       show fasta file\n");
-    printf("         -n,  --kmer       show kmer number\n");
+    printf("         -k,  --kmer       show kmer number\n");
     printf("         -s,  --shift      show shift number\n");
 }
 
@@ -72,30 +72,6 @@ void check(vector<T> &src, map<T,int> &dst)
 }
 
 
-vector<string> split_char(char* seq,float len,float shift)
-{
-    int l = len;	
-    string s=seq;
-    int s_length = s.length();
-    string N = "N";
-
-    std::vector<std::string> values;
-    for(int i = 0; i < s_length-l+1; i=i+1+shift)
-    {
-    	    string::size_type idx;
-	        string sn = s.substr(i,l);
-          idx=sn.find(N);
-	        if(idx == string::npos)
-          {
-	    	      values.push_back(sn);
-	        }
-    }
-
-    return values;
-    
-}
-
-
 char complement(char n)
 {
     switch(n)
@@ -124,6 +100,116 @@ string DNA_complement(string nuseq)
         complement);
     reverse(nucs.begin(),nucs.end());
     return nucs;
+}
+
+
+map<string, int> split_char(char* seq,float len,float shift)
+{
+  int l = len;	
+  string s=seq;
+  int s_length = s.length();
+  string N = "N";
+  
+  std::map<string, int> mymap;
+  for(int i = 0; i < s_length-l+1; i=i+1+shift)
+  {
+    string::size_type idx;
+    string sn = s.substr(i,l);
+    idx=sn.find(N);
+    if(idx == string::npos)
+    {   
+      string csn = DNA_complement(sn);
+      if(sn < csn)
+      {
+        if(mymap.find(sn) == mymap.end())
+        {
+          mymap[sn] = 1;
+        }
+        else{
+          int val = mymap[sn];
+          mymap[sn] = val + 1;
+        }
+      }
+      if(sn == csn)
+      {
+        if(mymap.find(sn) == mymap.end())
+        {
+          mymap[sn] = 1;
+        }
+        else{
+          int val = mymap[sn];
+          mymap[sn] = val + 1;
+        }
+      }
+      if(sn > csn)
+      {
+        if(mymap.find(csn) == mymap.end())
+        {
+          mymap[csn] = 1;
+        }
+        else{
+          int val = mymap[csn];
+          mymap[csn] = val + 1;
+        }
+      }
+    }
+  }
+  return mymap;
+}
+
+
+map<string, int> split_char_all(char* seq,float len,float shift,map<string, int> vs)
+{
+  int l = len;	
+  string s=seq;
+  int s_length = s.length();
+  string N = "N";
+  
+  for(int i = 0; i < s_length-l+1; i=i+1+shift)
+  {
+    string::size_type idx;
+    string sn = s.substr(i,l);
+    idx=sn.find(N);
+    if(idx == string::npos)
+    {   
+      string csn = DNA_complement(sn);
+      if(sn < csn)
+      {
+        if(vs.find(sn) == vs.end())
+        {
+          vs[sn] = 1;
+        }
+        else{
+          int val = vs[sn];
+          vs[sn] = val + 1;
+        }
+      }
+      if(sn == csn)
+      {
+        if(vs.find(sn) == vs.end())
+        {
+          vs[sn] = 1;
+        }
+        else{
+          int val = vs[sn];
+          vs[sn] = val + 1;
+        }
+      }
+      if(sn > csn)
+      {
+        if(vs.find(csn) == vs.end())
+        {
+          vs[csn] = 1;
+        }
+        else{
+          int val = vs[csn];
+          vs[csn] = val + 1;
+        }
+      }
+    }
+  }
+  
+  return vs;
 }
 
 
@@ -184,33 +270,20 @@ int main(int argc, char *argv[])
     char* st = param["-s"];
     
     if(!strcmp(sq, nn)==0){
-      if(!strcmp(sk, nn)==0)
+      if(!(strcmp(sk, nn)==0))
       {
-        if(!strcmp(st, nn)==0)
+        if(!(strcmp(st, nn)==0))
         {
           float skf = atof(sk);
           float stf = atof(st);
-          std::vector<std::string> vs;
-          vs = split_char(seq,skf,stf);
           
           //string
           //define map(key and value)
           map<string, int> vsDst;
-          check(vs, vsDst);
-          //define map iterator
+          vsDst = split_char(sq,skf,stf);
+          
           map<string, int>::iterator it1;
           
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-              string DNA_com = DNA_complement((*it1).first);
-              if(vsDst.find(DNA_com) != vsDst.end())
-              {
-                 int val_1 = it1->second;
-                 int val_2 = vsDst[DNA_com];
-                 vsDst.erase(DNA_com);
-                 vsDst[(*it1).first] = val_1 + val_2;
-              }
-          }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
             cout << (*it1).first << "," << (*it1).second << endl;
@@ -219,59 +292,33 @@ int main(int argc, char *argv[])
         else{
           float skf = atof(sk);
           float stf = 0;
-          std::vector<std::string> vs;
-          vs = split_char(seq,skf,stf);
           
           //string
           //define map(key and value)
           map<string, int> vsDst;
-          check(vs, vsDst);
-          //define map iterator
+          vsDst = split_char(sq,skf,stf);
+          
           map<string, int>::iterator it1;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
+          {  
             cout << (*it1).first << "," << (*it1).second << endl;
           }
         }
       }
       else{
-        if(!strcmp(sk, nn)==0)
+        if(!(strcmp(st, nn)==0))
         {
           float skf = 5;
           float stf = atof(st);
-          std::vector<std::string> vs;
-          vs = split_char(seq,skf,stf);
           
           //string
           //define map(key and value)
           map<string, int> vsDst;
-          check(vs, vsDst);
-          //define map iterator
+          vsDst = split_char(sq,skf,stf);
+          
           map<string, int>::iterator it1;
           
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
             cout << (*it1).first << "," << (*it1).second << endl;
@@ -280,113 +327,68 @@ int main(int argc, char *argv[])
         else{
           float skf = 5;
           float stf = 0;
-          std::vector<std::string> vs;
-          vs = split_char(seq,skf,stf);
           
           //string
           //define map(key and value)
           map<string, int> vsDst;
-          check(vs, vsDst);
-          //define map iterator
+          vsDst = split_char(sq,skf,stf);
+          
           map<string, int>::iterator it1;
           
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          {
+          {  
             cout << (*it1).first << "," << (*it1).second << endl;
           }
         }
       }
     }
     
-    if(!strcmp(sf, nn)==0){
+    if(!(strcmp(sf, nn)==0)){
       char line[MAX_LINE_LENGTH];
       fi = fopen(sf, "r");
-      if(!strcmp(sk, nn)==0)
+      if(!(strcmp(sk, nn)==0))
       {
-        if(!strcmp(st, nn)==0)
+        if(!(strcmp(st, nn)==0))
         {
           int count = 1;
           float skf = atof(sk);
           float stf = atof(st);
-          std::vector<std::string> vs;
-          std::vector<std::string> vs_all;
           
+          map<string, int> vsDst;
           while(fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
             if(count%2==0){
               char* str = (char*)(line);
               str[strlen(str)-1]=0;
-              vs = split_char(str,skf,stf);
+              vsDst = split_char_all(str,skf,stf,vsDst);
             }
             count++;
-            vs_all.insert(vs_all.end(), vs.begin(), vs.end());
           }
           
-          map<string, int> vsDst;
-          check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
             cout << (*it1).first << "," << (*it1).second << endl;
           }
-        
         }
         else{
           int count = 1;
           float skf = atof(sk);
           float stf = 0;
-          std::vector<std::string> vs;
-          std::vector<std::string> vs_all;
           
-          while (fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
+          
+          map<string, int> vsDst;
+          while(fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
             if(count%2==0){
               char* str = (char*)(line);
               str[strlen(str)-1]=0;
-              vs = split_char(str,skf,stf);
+              vsDst = split_char_all(str,skf,stf,vsDst);
             }
             count++;
-            vs_all.insert(vs_all.end(), vs.begin(), vs.end());
           }
           
-          map<string, int> vsDst;
-          check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
             cout << (*it1).first << "," << (*it1).second << endl;
@@ -394,40 +396,23 @@ int main(int argc, char *argv[])
         }
       }
       else{
-        if(!strcmp(st, nn)==0)
+        if(!(strcmp(st, nn)==0))
         {
           int count = 1;
           float skf = 5;
           float stf = atof(st);
-          std::vector<std::string> vs;
-          std::vector<std::string> vs_all;
-          
-          while (fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
+          map<string, int> vsDst;
+          while(fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
             if(count%2==0){
               char* str = (char*)(line);
               str[strlen(str)-1]=0;
-              vs = split_char(str,skf,stf);
+              vsDst = split_char_all(str,skf,stf,vsDst);
             }
             count++;
-            vs_all.insert(vs_all.end(), vs.begin(), vs.end());
           }
           
-          map<string, int> vsDst;
-          check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
             cout << (*it1).first << "," << (*it1).second << endl;
@@ -437,48 +422,33 @@ int main(int argc, char *argv[])
           int count = 1;
           float skf = 5;
           float stf = 0;
-          std::vector<std::string> vs;
-          std::vector<std::string> vs_all;
           
-          while (fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
+          
+          map<string, int> vsDst;
+          while(fgets(line, MAX_LINE_LENGTH, fi) != NULL ){
             if(count%2==0){
               char* str = (char*)(line);
               str[strlen(str)-1]=0;
-              vs = split_char(str,skf,stf);
+              vsDst = split_char_all(str,skf,stf,vsDst);
             }
             count++;
-            vs_all.insert(vs_all.end(), vs.begin(), vs.end());
           }
           
-          map<string, int> vsDst;
-          check(vs_all, vsDst);
           //define map iterator
           map<string, int>::iterator it1;
-          
-          for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
-          { 
-            string DNA_com = DNA_complement((*it1).first);
-            if(vsDst.find(DNA_com) != vsDst.end())
-            {
-              int val_1 = it1->second;
-              int val_2 = vsDst[DNA_com];
-              vsDst.erase(DNA_com);
-              vsDst[(*it1).first] = val_1 + val_2;
-            }
-          }
           for (it1 = vsDst.begin(); it1 != vsDst.end(); ++it1)
           {  
             cout << (*it1).first << "," << (*it1).second << endl;
           }
         }
       }
+      return 0;
     }
     
-    else{
+    if(strcmp(sq, nn)==0 && strcmp(sf, nn)==0){
       printf("Please add correct paramters,-f or -i!\n");
+      return 0;
     }
-    
-    
-  return 0;
+    return 1;
 } 
       
