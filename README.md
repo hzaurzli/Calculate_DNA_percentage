@@ -54,7 +54,8 @@ merge all kmers tables：
  ## -n kmers sequences at least exist in n kmers table
  ## -m 20G limitation of memory
 ```
-##Notice
+
+## Notice
 c++ file should compile in c++11
 ```
 g++ -std=c++11 kmer.cpp -o kmer.o
